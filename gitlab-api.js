@@ -5,6 +5,7 @@ var checkPeriod     = 15;
 var projects        = [];
 var pendingRequests = [];
 var timer           = null;
+var projectsPage    = 1;
 
 chrome.storage.sync.get(
     {
@@ -86,6 +87,7 @@ var updateCounter = function updateCounter(mergeRequests) {
 
 var getMergeRequestsFromProjects = function getMergeRequestsFromProjects(data) {
     if (0 === data.length) {
+        projectsPage = 1;
         return;
     }
 
@@ -93,25 +95,20 @@ var getMergeRequestsFromProjects = function getMergeRequestsFromProjects(data) {
     for (var i = 0; i < data.length; i++) {
         getQuery('/projects/'+data[i].id+'/merge_requests?state=opened&private_token='+privateToken, updateCounter);
     }
+
+    projectsPage++;
+    getProjects();
 };
 
-var getProjectsFromGroup = function getProjectsFromGroup(group) {
-    console.log(group);
-    getMergeRequestsFromProjects(group.projects);
-};
-
-var getGroupsData = function getGroupsData(groups) {
-    for (var i = 0; i < groups.length; i++) {
-        getQuery('/groups/'+groups[i].id+'?private_token='+privateToken, getProjectsFromGroup);
-    }
+var getProjects = function getProjects() {
+    getQuery('/projects?page='+projectsPage+'&archived=false&private_token='+privateToken, getMergeRequestsFromProjects);
 };
 
 var getGlobalCount = function getGlobalCount() {
     projects        = [];
     pendingRequests = [];
     if (null !== gitlabUrl && null !== privateToken) {
-        getQuery('/projects?private_token='+privateToken, getMergeRequestsFromProjects);
-        getQuery('/groups?private_token='+privateToken, getGroupsData);
+        getProjects();
     }
     timer = setTimeout(getGlobalCount, checkPeriod * 60 * 1000);
 };
