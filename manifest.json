@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Gitlab Merge Requests Notifier",
     "description": "Displays the number of pending merge requests",
-    "version": "1.0",
+    "version": "1.0.1",
     "icons": {
         "16": "gitlab-128.png",
         "48": "gitlab-48.png",
