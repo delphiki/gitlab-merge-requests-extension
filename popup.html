@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gitlab Merge Requets Notifier</title>
+    <style>
+        body {
+            width: 400px;
+        }
+        table {
+            width: 95%;
+            margin:auto;
+        }
+        table td:last-of-type {
+            text-align: right;
+        }
+        #no-pending {
+            text-align: center;
+        }
+    </style>
+    <base target="_blank">
+</head>
+<body>
+    <p id="no-pending">No pending merge request</p>
+    <div id="pending-requests"></div>
+    <script src="popup.js"></script>
+</body>
+</html>

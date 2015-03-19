@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "Gitlab Merge Requests Notifier",
+    "description": "Displays the number of pending merge requests",
+    "version": "1.0",
+    "icons": {
+        "16": "gitlab-128.png",
+        "48": "gitlab-48.png",
+        "128": "gitlab-128.png"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "browser_action": {
+        "default_icon": "gitlab.png",
+        "default_popup": "popup.html"
+    },
+    "options_ui": {
+        "page": "options.html",
+        "chrome_style": true
+    },
+    "background": {
+        "scripts": [
+            "gitlab-api.js"
+        ]
+    }
+}

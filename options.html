@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gitlab Merge Requets Notifier Options</title>
+    <style>
+        label {
+            display:block;
+        }
+        input:not([type="submit"]) {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <label for="gitlabUrl">Your Gitlab URL</label>
+    <input type="url" id="gitlabUrl" name="gitlabUrl" placeholder="http://gitlab.example.com" required>
+
+    <label for="privateToken">Your private token (under <em>Profile settings</em> &gt; <em>Account</em>)</label>
+    <input type="text" id="privateToken" name="privateToken" required>
+
+    <label for="checkPeriod">Check every...</label>
+    <input type="number" id="checkPeriod" name="checkPeriod" value="15"> minutes
+
+    <div id="status"></div>
+    <button id="save">Save</button>
+    <script src="options.js"></script>
+</body>
+</html>
