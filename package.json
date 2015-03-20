@@ -1,0 +1,9 @@
+{
+  "name": "gitlab-merge-requests-extension",
+  "version": "0.1.0",
+  "devDependencies": {
+    "gulp": "~3.8.11",
+    "gulp-clean": "~0.3.1",
+    "gulp-zip": "~2.0.3"
+  }
+}
