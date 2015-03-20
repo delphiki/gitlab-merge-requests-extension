@@ -10,7 +10,7 @@ Start by running:
 npm install
 ```
 
-Install [Extension Relader](https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid).
+Install [Extension Reloader](https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid).
 
 Finally run:
 ```bash
