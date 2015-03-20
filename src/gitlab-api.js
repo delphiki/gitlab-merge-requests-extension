@@ -2,21 +2,34 @@ var privateToken    = null;
 var gitlabUrl       = null;
 var apiUrl          = null;
 var checkPeriod     = 15;
+var config          = {
+    notMine: false,
+    unassignedOnly: false
+};
+
 var projects        = [];
 var pendingRequests = [];
 var timer           = null;
 var projectsPage    = 1;
 
+currentUser     = null;
+
 chrome.storage.sync.get(
     {
         gitlabUrl: null,
         privateToken: null,
-        checkPeriod: 15
+        checkPeriod: 15,
+        config: {
+            notMine: false,
+            unassignedOnly: false
+        }
     },
     function (items) {
         gitlabUrl    = items.gitlabUrl;
         privateToken = items.privateToken;
         checkPeriod  = items.checkPeriod;
+        config       = items.config;
+
         apiUrl       = gitlabUrl + '/api/v3';
 
         getGlobalCount();
@@ -45,15 +58,14 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 
 var getQuery = function getQuery(url, cb) {
     var timestamp = Date.now();
+    var hasParams = (-1 !== url.indexOf('?'));
 
-    if (-1 === url.indexOf('?')) {
-        url += '?t='+timestamp;
-    } else {
-        url += '&t='+timestamp;
-    }
+    url = apiUrl+url;
+    url += (hasParams ? '&' : '?')+'private_token='+privateToken;
+    url += '&t='+timestamp;
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', apiUrl+url, true);
+    xhr.open('GET', url, true);
     xhr.onreadystatechange = function() {
         if(xhr.readyState == 4 && xhr.status == 200) {
             cb(JSON.parse(xhr.responseText));
@@ -77,7 +89,16 @@ var updateCounter = function updateCounter(mergeRequests) {
         return;
     }
 
-    pendingRequests = betterConcat(pendingRequests, mergeRequests);
+    var validRequests = [];
+    for (var i = 0; i < mergeRequests.length; i++) {
+        if (config.notMine && mergeRequests[i].author.id === currentUser.id
+        || config.unassignedOnly && null !== mergeRequests[i].assignee) {
+            continue;
+        }
+        validRequests.push(mergeRequests[i]);
+    }
+
+    pendingRequests = betterConcat(pendingRequests, validRequests);
     chrome.browserAction.setBadgeText({text: pendingRequests.length+''});
     chrome.browserAction.setBadgeBackgroundColor({color: [0,0,0,0]});
     if (0 === pendingRequests.length) {
@@ -93,22 +114,31 @@ var getMergeRequestsFromProjects = function getMergeRequestsFromProjects(data) {
 
     projects = betterConcat(projects, data);
     for (var i = 0; i < data.length; i++) {
-        getQuery('/projects/'+data[i].id+'/merge_requests?state=opened&private_token='+privateToken, updateCounter);
+        getQuery('/projects/'+data[i].id+'/merge_requests?state=opened', updateCounter);
     }
 
     projectsPage++;
     getProjects();
 };
 
-var getProjects = function getProjects() {
-    getQuery('/projects?page='+projectsPage+'&archived=false&private_token='+privateToken, getMergeRequestsFromProjects);
+var getProjects = function getProjects(user) {
+    if (typeof user !== 'undefined'){
+        currentUser = user;
+    }
+
+    getQuery('/projects?page='+projectsPage+'&archived=false', getMergeRequestsFromProjects);
 };
+
+var getCurrentUser = function getCurrentUser() {
+    currentUser = null;
+    getQuery('/user', getProjects);
+}
 
 var getGlobalCount = function getGlobalCount() {
     projects        = [];
     pendingRequests = [];
     if (null !== gitlabUrl && null !== privateToken) {
-        getProjects();
+        getCurrentUser();
     }
     timer = setTimeout(getGlobalCount, checkPeriod * 60 * 1000);
 };

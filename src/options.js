@@ -3,6 +3,11 @@ function save_options() {
   var privateToken = document.getElementById('privateToken').value;
   var checkPeriod  = document.getElementById('checkPeriod').value;
 
+  var config = {
+    notMine: document.getElementById('configNotMine').checked,
+    unassignedOnly: document.getElementById('configUnassignedOnly').checked
+  };
+
   if ('/' === gitlabUrl.substr(-1)) {
     gitlabUrl = gitlabUrl.substr(0, gitlabUrl.length - 1);
     document.getElementById('gitlabUrl').value = gitlabUrl;
@@ -15,7 +20,8 @@ function save_options() {
   chrome.storage.sync.set({
     gitlabUrl: gitlabUrl,
     privateToken: privateToken,
-    checkPeriod: checkPeriod
+    checkPeriod: checkPeriod,
+    config: config
   }, function() {
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
@@ -29,11 +35,18 @@ function restore_options() {
   chrome.storage.sync.get({
     gitlabUrl: '',
     privateToken: '',
-    checkPeriod: 15
+    checkPeriod: 15,
+    config: {
+      notMine: false,
+      unassignedOnly: false
+    }
   }, function(items) {
     document.getElementById('gitlabUrl').value    = items.gitlabUrl;
     document.getElementById('privateToken').value = items.privateToken;
     document.getElementById('checkPeriod').value  = items.checkPeriod;
+
+    document.getElementById('configNotMine').checked        = items.config.notMine;
+    document.getElementById('configUnassignedOnly').checked = items.config.unassignedOnly;
   });
 }
 

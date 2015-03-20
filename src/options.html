@@ -6,20 +6,33 @@
         label {
             display:block;
         }
-        input:not([type="submit"]) {
-            margin-bottom: 10px;
+        input {
+            margin-bottom: 10px !important;
+        }
+        #save {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <label for="gitlabUrl">Your Gitlab URL</label>
-    <input type="url" id="gitlabUrl" name="gitlabUrl" placeholder="http://gitlab.example.com" required>
+    <input type="url" id="gitlabUrl" name="gitlabUrl" placeholder="http://gitlab.example.com" required />
 
     <label for="privateToken">Your private token (under <em>Profile settings</em> &gt; <em>Account</em>)</label>
-    <input type="text" id="privateToken" name="privateToken" required>
+    <input type="text" id="privateToken" name="privateToken" required />
 
     <label for="checkPeriod">Check every...</label>
-    <input type="number" id="checkPeriod" name="checkPeriod" value="15"> minutes
+    <input type="number" id="checkPeriod" name="checkPeriod" value="15" required /> minutes
+
+    <fieldset>
+        <legend>Merge Requests</legend>
+        <label for="configNotMine">
+            <input type="checkbox" id="configNotMine" name="configNotMine" /> Do not show the requests I submitted
+        </label>
+        <label for="configUnassignedOnly">
+            <input type="checkbox" id="configUnassignedOnly" name="configUnassignedOnly"> Unassigned only
+        </label>
+    </fieldset>
 
     <div id="status"></div>
     <button id="save">Save</button>
