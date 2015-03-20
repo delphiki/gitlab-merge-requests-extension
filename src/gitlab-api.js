@@ -47,9 +47,11 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
             privateToken = storageChange.newValue;
         } else if ('checkPeriod' === key) {
             checkPeriod = storageChange.newValue;
+        } else if ('config' === key) {
+            config = storageChange.newValue;
         }
 
-        if (['gitlabUrl', 'privateToken', 'checkPeriod'].indexOf(key) !== -1) {
+        if (['gitlabUrl', 'privateToken', 'checkPeriod', 'config'].indexOf(key) !== -1) {
             clearTimeout(timer);
             getGlobalCount();
         }
@@ -139,6 +141,9 @@ var getGlobalCount = function getGlobalCount() {
     pendingRequests = [];
     if (null !== gitlabUrl && null !== privateToken) {
         getCurrentUser();
+    } else {
+        chrome.browserAction.setBadgeText({text: ''});
     }
+
     timer = setTimeout(getGlobalCount, checkPeriod * 60 * 1000);
 };
