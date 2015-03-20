@@ -50,7 +50,7 @@ var displayRequests = function displayRequests() {
     var buffer = '';
     for (var i = 0; i < sortedData.length; i++) {
         var p = sortedData[i];
-        buffer += '<h3>'+p.name+'</h3>';
+        buffer += '<h3><a href="'+gitlabUrl+'/'+p.path+'">'+p.name+'</a></h3>';
         buffer += '<table>'
             +'<tr><th>Title</th><th>Author</th><th>Assignee</th></tr>';
 
@@ -73,6 +73,10 @@ var updateDisplay = function updateDisplay() {
     privateToken    = chrome.extension.getBackgroundPage().privateToken;
     projects        = chrome.extension.getBackgroundPage().projects;
     pendingRequests = chrome.extension.getBackgroundPage().pendingRequests;
+
+    if (null !== gitlabUrl && '' !== gitlabUrl) {
+        document.getElementById('gitlabLink').href = gitlabUrl;
+    }
 
     if (null === gitlabUrl || '' === gitlabUrl || null === privateToken || '' === privateToken) {
         noPending.style.display = 'none';

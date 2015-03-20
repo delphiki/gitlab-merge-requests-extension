@@ -6,6 +6,45 @@
         body {
             width: 500px;
         }
+        a {
+            color: #446e9b;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #no-pending {
+            text-align: center;
+        }
+        header {
+            background-color: #019875;
+            color: #fff;
+        }
+        header a {
+            color: #fff;
+        }
+        header ul {
+            display:table;
+            width:96%;
+            margin:0 auto;
+            padding:0;
+            font-size: 1.3em;
+        }
+        header ul li {
+            display:table-cell;
+            padding:8px;
+            text-align: center;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+        }
+        h3 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
+        }
         table {
             width: 95%;
             margin:auto;
@@ -22,14 +61,19 @@
             text-align: right;
             width: 20%;
         }
-        #no-pending {
-            text-align: center;
+        em {
+            color: #888;
         }
     </style>
     <base target="_blank">
 </head>
 <body>
-    <p style="text-align:right;"><a href="#" class="optionsLink">Options</a></p>
+    <header>
+        <ul>
+            <li class="text-left"><a href="#" id="gitlabLink">Gitlab dashboard</a></li>
+            <li class="text-right"><a href="#" class="optionsLink">Options</a></li>
+        </ul>
+    </header>
     <p id="no-pending">No pending merge request</p>
     <div id="pending-requests"></div>
     <script src="popup.js"></script>
