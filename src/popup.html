@@ -4,14 +4,23 @@
     <title>Gitlab Merge Requets Notifier</title>
     <style>
         body {
-            width: 400px;
+            width: 500px;
         }
         table {
             width: 95%;
             margin:auto;
         }
-        table td:last-of-type {
+        table th:first-of-type {
+            text-align: left;
+            width: 60%;
+        }
+        table th:nth-of-type(2), table td:nth-of-type(2) {
+            text-align: center;
+            width: 20%;
+        }
+        table th:last-of-type, table td:last-of-type {
             text-align: right;
+            width: 20%;
         }
         #no-pending {
             text-align: center;
@@ -20,6 +29,7 @@
     <base target="_blank">
 </head>
 <body>
+    <p style="text-align:right;"><a href="#" class="optionsLink">Options</a></p>
     <p id="no-pending">No pending merge request</p>
     <div id="pending-requests"></div>
     <script src="popup.js"></script>

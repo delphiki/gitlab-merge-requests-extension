@@ -1,7 +1,10 @@
 var gitlabUrl       = null;
+var privateToken    = null;
 var projects        = [];
 var pendingRequests = [];
 var sortedData      = [];
+
+var extensionId     = chrome.runtime.id;
 
 var noPending  = document.getElementById('no-pending');
 var pendingDiv = document.getElementById('pending-requests');
@@ -48,11 +51,16 @@ var displayRequests = function displayRequests() {
     for (var i = 0; i < sortedData.length; i++) {
         var p = sortedData[i];
         buffer += '<h3>'+p.name+'</h3>';
-        buffer += '<table>';
+        buffer += '<table>'
+            +'<tr><th>Title</th><th>Author</th><th>Assignee</th></tr>';
 
         for (var j = 0; j < p.mergeRequests.length; j++) {
             var r = p.mergeRequests[j];
-            buffer += '<tr><td><a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a></td><td>'+r.author.name+'</td></tr>';
+            buffer += '<tr>'
+                +'<td><a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a></td>'
+                +'<td>'+r.author.username+'</td>'
+                +'<td>'+(null !== r.assignee ? r.assignee.username : '<em>None</em>')+'</td>'
+            +'</tr>';
         }
         buffer += '</table>';
     }
@@ -62,14 +70,28 @@ var displayRequests = function displayRequests() {
 
 var updateDisplay = function updateDisplay() {
     gitlabUrl       = chrome.extension.getBackgroundPage().gitlabUrl;
+    privateToken    = chrome.extension.getBackgroundPage().privateToken;
     projects        = chrome.extension.getBackgroundPage().projects;
     pendingRequests = chrome.extension.getBackgroundPage().pendingRequests;
 
-    if (projects.length > 0 && pendingRequests.length > 0) {
+    if (null === gitlabUrl || '' === gitlabUrl || null === privateToken || '' === privateToken) {
+        noPending.style.display = 'none';
+        pendingDiv.innerHTML = '<p style="text-align:center;">'
+            +'<a href="#" class="optionsLink">Configuration</a> incorrect or missing.'
+        +'</p>';
+    } else if (projects.length > 0 && pendingRequests.length > 0) {
         noPending.style.display = 'none';
         displayRequests();
     } else {
         pendingDiv.innerHTML    = '';
         noPending.style.display = 'block';
+    }
+
+    var optionsLinks = document.querySelectorAll('.optionsLink');
+    for (var i = 0; i < optionsLinks.length; i++) {
+        optionsLinks[i].addEventListener('click', function(e){
+            e.preventDefault();
+            chrome.tabs.create({ url: 'chrome://extensions/?options='+extensionId });
+        }, false);
     }
 }();
