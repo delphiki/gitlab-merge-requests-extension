@@ -9,9 +9,9 @@ module.exports = function(grunt) {
         "src": [
           "src/",
         ],
-        "dest": "dist/<%= pkg.name %>-<%= manifest.version %>.crx",
-        "zipDest": "dist//<%= pkg.name %>-<%= manifest.version %>.zip",
-        "privateKey": "../gitlab-merge-requests.pem",
+        "dest": "dist/",
+        "zipDest": "dist/",
+        "privateKey": "../gitlab-merge-requests.pem"
       }
     },
     open: {
@@ -22,6 +22,10 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['src/*.js'],
+        tasks: ['crx', 'open']
+      },
+      html: {
+        files: ['src/*.html'],
         tasks: ['crx', 'open']
       }
     }
