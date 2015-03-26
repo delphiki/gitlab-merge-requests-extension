@@ -52,14 +52,29 @@ var displayRequests = function displayRequests() {
         var p = sortedData[i];
         buffer += '<h3><a href="'+gitlabUrl+'/'+p.path+'">'+p.name+'</a></h3>';
         buffer += '<table>'
-            +'<tr><th>Title</th><th>Author</th><th>Assignee</th></tr>';
+            +'<tr>'
+                +'<th style="width:50%;">Title</th>'
+                +'<th style="width:16%;">Date</th>'
+                +'<th style="width:17%;">Author</th>'
+                +'<th style="width:17%;">Assignee</th>'
+            +'</tr>';
 
         for (var j = 0; j < p.mergeRequests.length; j++) {
             var r = p.mergeRequests[j];
+            console.log(r);
             buffer += '<tr>'
-                +'<td><a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a></td>'
-                +'<td>'+r.author.username+'</td>'
-                +'<td>'+(null !== r.assignee ? r.assignee.username : '<em>None</em>')+'</td>'
+                +'<td>'
+                    +'<a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a><br />'
+                    +'<span class="branch-name">'+r.source_branch+'</span> into <span class="branch-name">'+r.target_branch+'</span>'
+                +'</td>'
+                +'<td>'+r.created_at.split('T')[0]+'</td>'
+                +'<td>'
+                    +'<img class="avatar" src="'+r.author.avatar_url+'" alt="'+r.author.username+'" /> '
+                    +r.author.username
+                +'</td>'
+                +'<td>'
+                    +(null !== r.assignee ? '<img class="avatar" src="'+r.assignee.avatar_url+'" alt="'+r.assignee.username+'" /> '+r.assignee.username : '<em>None</em>')
+                +'</td>'
             +'</tr>';
         }
         buffer += '</table>';

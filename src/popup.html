@@ -4,7 +4,7 @@
     <title>Gitlab Merge Requets Notifier</title>
     <style>
         body {
-            width: 500px;
+            width: 750px;
         }
         a {
             color: #446e9b;
@@ -48,18 +48,32 @@
         table {
             width: 95%;
             margin:auto;
+            border-collapse: collapse;
         }
-        table th:first-of-type {
-            text-align: left;
-            width: 60%;
-        }
-        table th:nth-of-type(2), table td:nth-of-type(2) {
+        table th, table td {
             text-align: center;
-            width: 20%;
+            padding:4px;
+            vertical-align: middle;
         }
-        table th:last-of-type, table td:last-of-type {
-            text-align: right;
-            width: 20%;
+        table td img {
+            vertical-align: middle;
+        }
+        table th:first-of-type, table td:first-of-type {
+            text-align: left;
+        }
+        table tr:nth-child(even) {
+            background-color: #efefef;
+        }
+        .branch-name {
+            background-color: #ffecdb;
+            color: #333;
+            font-family: "Menlo", "Liberation Mono", "Consolas", "Courier New", "andale mono", "lucida console", monospace;
+            padding:2px;
+            font-size: 0.8em;
+        }
+        .avatar {
+            width:16px;
+            height:16px;
         }
         em {
             color: #888;
