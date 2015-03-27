@@ -14,6 +14,19 @@ module.exports = function(grunt) {
         "privateKey": "../gitlab-merge-requests.pem"
       }
     },
+    copy: {
+      front_images: {
+        files: [
+          {
+            expand: true,
+            cwd: 'bower_components/moment/min/',
+            src: ['moment.min.js'],
+            dest: 'src/vendor'
+          },
+        ]
+      }
+    },
+
     open: {
       dev: {
         url: 'http://reload.extensions'
@@ -22,14 +35,14 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['src/*.js'],
-        tasks: ['crx', 'open']
+        tasks: ['copy', 'crx', 'open']
       },
       html: {
         files: ['src/*.html'],
-        tasks: ['crx', 'open']
+        tasks: ['copy', 'crx', 'open']
       }
     }
   });
 
-  grunt.registerTask('default', ['crx']);
+  grunt.registerTask('default', ['copy', 'crx']);
 };

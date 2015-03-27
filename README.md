@@ -5,9 +5,10 @@ Simple configuration, minimal UI.
 
 ## Contributing
 
-Start by running:
+Setup your environment:
 ```bash
 npm install
+bower install
 ```
 
 Install [Extension Reloader](https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid).
