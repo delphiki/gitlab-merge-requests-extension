@@ -12,7 +12,7 @@ var pendingRequests = [];
 var timer           = null;
 var projectsPage    = 1;
 
-currentUser     = null;
+var currentUser = null;
 
 chrome.storage.sync.get(
     {
@@ -36,6 +36,7 @@ chrome.storage.sync.get(
     }
 );
 
+// listeners
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     for (key in changes) {
         var storageChange = changes[key];
@@ -57,6 +58,15 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
         }
     }
 });
+
+chrome.runtime.onMessage.addListener(function(request,sender,sendResponse) {
+    console.log(request.action);
+    if("refresh" === request.action) {
+        clearTimeout(timer);
+        getGlobalCount();
+    }
+});
+
 
 var getQuery = function getQuery(url, cb) {
     var timestamp = Date.now();
@@ -86,6 +96,7 @@ var betterConcat = function betterConcat(arr1, arr2) {
     return arr1;
 };
 
+// display methods
 var updateCounter = function updateCounter(mergeRequests) {
     if (0 === mergeRequests.length) {
         return;
@@ -106,17 +117,20 @@ var updateCounter = function updateCounter(mergeRequests) {
     if (0 === pendingRequests.length) {
         chrome.browserAction.setBadgeBackgroundColor({color: [0,200,0,255]});
     }
+    chrome.runtime.sendMessage({ message: "refreshed" });
 };
 
-var getMergeRequestsFromProjects = function getMergeRequestsFromProjects(data) {
-    if (0 === data.length) {
+// api methods
+
+var getMergeRequestsFromProjects = function getMergeRequestsFromProjects(userProjects) {
+    if (0 === userProjects.length) {
         projectsPage = 1;
         return;
     }
 
-    projects = betterConcat(projects, data);
-    for (var i = 0; i < data.length; i++) {
-        getQuery('/projects/'+data[i].id+'/merge_requests?state=opened', updateCounter);
+    projects = betterConcat(projects, userProjects);
+    for (var i = 0; i < userProjects.length; i++) {
+        getQuery('/projects/'+userProjects[i].id+'/merge_requests?state=opened', updateCounter);
     }
 
     projectsPage++;
@@ -136,6 +150,7 @@ var getCurrentUser = function getCurrentUser() {
     getQuery('/user', getProjects);
 }
 
+// init method
 var getGlobalCount = function getGlobalCount() {
     projects        = [];
     pendingRequests = [];

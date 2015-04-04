@@ -8,8 +8,10 @@ var extensionId     = chrome.runtime.id;
 
 var noPending  = document.getElementById('no-pending');
 var pendingDiv = document.getElementById('pending-requests');
+var refreshBtn = document.getElementById('refresh');
 
 var sortData = function sortData() {
+    sortedData = [];
     var tmp = pendingRequests;
     var projectsIds = [];
     var requestsIds = [];
@@ -61,13 +63,12 @@ var displayRequests = function displayRequests() {
 
         for (var j = 0; j < p.mergeRequests.length; j++) {
             var r = p.mergeRequests[j];
-            console.log(r);
             buffer += '<tr>'
                 +'<td>'
                     +'<a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a><br />'
                     +'<span class="branch-name">'+r.source_branch+'</span> into <span class="branch-name">'+r.target_branch+'</span>'
                 +'</td>'
-                +'<td>'+r.created_at.split('T')[0]+'</td>'
+                +'<td title="'+moment(r.created_at).format('MMMM Do YYYY, hh:mm:ss A')+'">'+moment(r.created_at).fromNow()+'</td>'
                 +'<td>'
                     +'<img class="avatar" src="'+r.author.avatar_url+'" alt="'+r.author.username+'" /> '
                     +r.author.username
@@ -113,4 +114,22 @@ var updateDisplay = function updateDisplay() {
             chrome.tabs.create({ url: 'chrome://extensions/?options='+extensionId });
         }, false);
     }
-}();
+};
+updateDisplay();
+
+var handleRefresh = function handleRefresh(e) {
+    e.preventDefault();
+    pendingDiv.innerHTML = '<div class="spinner"> \
+            <div class="bounce1"></div> \
+            <div class="bounce2"></div> \
+            <div class="bounce3"></div> \
+        </div>';
+    chrome.runtime.sendMessage({ action: "refresh" }, updateDisplay);
+};
+refreshBtn.addEventListener('click', handleRefresh);
+
+chrome.runtime.onMessage.addListener(function(request,sender,sendResponse) {
+    if("refreshed" === request.message) {
+        updateDisplay();
+    }
+});
