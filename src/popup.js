@@ -55,7 +55,8 @@ var displayRequests = function displayRequests() {
         buffer += '<h3><a href="'+gitlabUrl+'/'+p.path+'">'+p.name+'</a></h3>';
         buffer += '<table>'
             +'<tr>'
-                +'<th style="width:50%;">Title</th>'
+                +'<th style="width:40%;">Title</th>'
+                +'<th style="width:10%;">Votes</th>'
                 +'<th style="width:16%;">Date</th>'
                 +'<th style="width:17%;">Author</th>'
                 +'<th style="width:17%;">Assignee</th>'
@@ -63,10 +64,14 @@ var displayRequests = function displayRequests() {
 
         for (var j = 0; j < p.mergeRequests.length; j++) {
             var r = p.mergeRequests[j];
+            console.log(r);
             buffer += '<tr>'
                 +'<td>'
                     +'<a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a><br />'
                     +'<span class="branch-name">'+r.source_branch+'</span> &gt; <span class="branch-name">'+r.target_branch+'</span>'
+                +'</td>'
+                +'<td>'
+                    +'+'+r.upvotes+'/-'+r.downvotes
                 +'</td>'
                 +'<td title="'+moment(r.created_at).format('MMMM Do YYYY, hh:mm:ss A')+'">'+moment(r.created_at).fromNow()+'</td>'
                 +'<td>'
