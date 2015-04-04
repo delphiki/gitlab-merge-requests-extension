@@ -1,6 +1,6 @@
 {
   "name": "gitlab-merge-requests",
-  "version": "1.2.1",
+  "version": "1.2.5",
   "description": "Displays the number of pending merge requests",
   "main": "gitlab-api.js",
   "scripts": {
