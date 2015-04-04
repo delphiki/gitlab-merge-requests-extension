@@ -66,7 +66,7 @@ var displayRequests = function displayRequests() {
             buffer += '<tr>'
                 +'<td>'
                     +'<a href="'+gitlabUrl+'/'+p.path+'/merge_requests/'+r.iid+'">'+r.title+'</a><br />'
-                    +'<span class="branch-name">'+r.source_branch+'</span> into <span class="branch-name">'+r.target_branch+'</span>'
+                    +'<span class="branch-name">'+r.source_branch+'</span> &gt; <span class="branch-name">'+r.target_branch+'</span>'
                 +'</td>'
                 +'<td title="'+moment(r.created_at).format('MMMM Do YYYY, hh:mm:ss A')+'">'+moment(r.created_at).fromNow()+'</td>'
                 +'<td>'
